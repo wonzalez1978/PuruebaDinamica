@@ -1,6 +1,7 @@
 package cl.desafiolatam.pruebadinamica.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,20 +17,22 @@ import java.util.Objects;
 import cl.desafiolatam.pruebadinamica.R;
 
 public class PreguntaFragment extends Fragment {
-    int radioButtonValue = 0;
+    private int radioButtonValue = 0;
     private TextView preguntaView, categoriaView;
     private RadioGroup grupoRespuestasView;
     private RadioButton respuestaUno, respuestaDos, respuestaTres, respuestaCuatro;
+    private OnFragmentPreguntaListener mListener;
 
 
-    public static PreguntaFragment newIntance(String pregunta, String categoria, String respuesta_Correcta, ArrayList<String> respuesta_Incorrecta) {
+    public static PreguntaFragment newInstance(String questions, String category, String correct_answer, ArrayList<String> incorrectAnswers) {
 
         PreguntaFragment fragment = new PreguntaFragment();
         Bundle arguments = new Bundle();
-        arguments.putString("Pregunta", pregunta);
-        arguments.putString("Categoria", categoria);
-        arguments.putString("Respuesta_correcta", respuesta_Correcta);
-        arguments.putStringArrayList("Respuesta_incorrecta", respuesta_Incorrecta);
+        arguments.putString("QUESTIONS", questions);
+        arguments.putString("CATEGORY", category);
+        arguments.putString("CORRECT_ANSWER", correct_answer);
+        arguments.putStringArrayList("INCORRECT_ANSWERS", incorrectAnswers);
+        Log.d("incorect__answer", incorrectAnswers.toString());
         fragment.setArguments(arguments);
         return fragment;
     }
@@ -38,53 +41,41 @@ public class PreguntaFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_pregunta, container, false);
 
-        final String pregunta = Objects.requireNonNull(getArguments()).getString("Pregunta");
-        final String categoria = Objects.requireNonNull(getArguments().getString("Categoria"));
-        final String respuestaCorrecta = Objects.requireNonNull(getArguments().getString("Respuesta_Correcta"));
-        final ArrayList<String> respuestasIncorrectas = Objects.requireNonNull(getArguments().getStringArrayList("Respuesta_incorrecta"));
+        final String questions = Objects.requireNonNull(getArguments()).getString("QUESTIONS");
+        final String category = Objects.requireNonNull(getArguments().getString("CATEGORY"));
+        final String correct_answer = Objects.requireNonNull(getArguments().getString("CORRECT_ANSWER"));
+        final ArrayList<String> incorrect_answers = Objects.requireNonNull(getArguments().getStringArrayList("INCORRECT_ANSWERS"));
 
-        initializeViews(view);
-        preguntaView.setText(pregunta);
-        preguntaView.setText(categoria);
-        preguntaView=view.findViewById(R.id.pregunta);
-        categoriaView=view.findViewById(R.id.categoria);
-        grupoRespuestasView=view.findViewById(R.id.radioGrupoRespuestas);
-        respuestaUno=view.findViewById(R.id.radioRespuestaUno);
-        respuestaDos=view.findViewById(R.id.radioRespuestaDos);
-        respuestaTres=view.findViewById(R.id.radioRespuestaTres);
-        respuestaCuatro=view.findViewById(R.id.radioRespuestaCuatro);
+        //inicializamos las vistas declaradas
+        initializeViews (view);
+        //asignando valores dinamicos en base a los datos recibidos
+        //de nuestra API asignamos valores a las vistas
 
-        for (int x = 0; x < respuestasIncorrectas.size(); x++) {
+        //
+        preguntaView.setText(questions);
+        categoriaView.setText(category);
+
+       //Recorremos el arreglo de Strings "Incorrect answers" de nuestra API de datos
+        for (int x = 0; x < incorrect_answers.size(); x++) {
             switch (x) {
                 case 0:
-                    respuestaUno.setText(respuestasIncorrectas.get(x));
+                    respuestaUno.setText(incorrect_answers.get(x));
                     break;
                 case 1:
-                respuestaDos.setText(respuestasIncorrectas.get(x));
+                respuestaDos.setText(incorrect_answers.get(x));
                 break;
                 case 2:
-                respuestaTres.setText(respuestasIncorrectas.get(x));
+                respuestaTres.setText(incorrect_answers.get(x));
                 break;
             }
         }
-        respuestaCuatro = view.findViewById(R.id.radioRespuestaCuatro);
-        respuestaCuatro.setText(respuestaCorrecta);
-        return view;
-    }
-
-    private View initializeViews(View view) {
-        preguntaView = view.findViewById(R.id.pregunta);
-        categoriaView = view.findViewById(R.id.categoria);
-        grupoRespuestasView = view.findViewById(R.id.radioGrupoRespuestas);
-        respuestaUno = view.findViewById(R.id.radioRespuestaUno);
-        respuestaDos = view.findViewById(R.id.radioRespuestaDos);
-        respuestaTres = view.findViewById(R.id.radioRespuestaTres);
-
+        //AGREGAMOS LA RESPUESTA CORRECTA DE LA API EN UN CUARTO RADIOBUTTON
+        respuestaCuatro = view.findViewById(R.id.rRespuestaCuatro);
+        respuestaCuatro.setText(correct_answer);
+        //EVENTO DE RADIO - BUTTONS - CODIGO PARA QUE LA SELECCION DEL RADIO BUTTON SEA ACTUALIZADO EN LA VISTA
         grupoRespuestasView.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-
                 if (respuestaUno.isChecked()){
                     radioButtonValue = 1;
 
@@ -96,11 +87,24 @@ public class PreguntaFragment extends Fragment {
                     radioButtonValue = 4;
                 }
             }
-       });
+
+        });
         return view;
     }
+
+private void initializeViews(View view){
+    preguntaView=view.findViewById(R.id.textViewQuestions);
+    categoriaView=view.findViewById(R.id.textViewCategory);
+    grupoRespuestasView=view.findViewById(R.id.rgRespuestas);
+    respuestaUno=view.findViewById(R.id.rRespuestaUno);
+    respuestaDos=view.findViewById(R.id.rRespuestaDos);
+    respuestaTres=view.findViewById(R.id.rRespuestaTres);
+    respuestaCuatro=view.findViewById(R.id.rRespuestaCuatro);
+
+}
+
+
 
 
 
 }
-

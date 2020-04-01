@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="radioRespuestaCuatro" type="id" />
-    <item name="pregunta" type="id" />
-    <item name="categoria" type="id" />
+    <item name="questions" type="id" />
+    <item name="category" type="id" />
     <item name="radioGrupoRespuestas" type="id" />
     <item name="radioRespuestaUno" type="id" />
     <item name="radioRespuestaDos" type="id" />

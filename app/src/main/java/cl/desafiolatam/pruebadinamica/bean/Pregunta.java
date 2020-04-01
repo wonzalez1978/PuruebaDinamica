@@ -12,7 +12,7 @@ public class Pregunta {
     private String difficulty;
     private String question;
     private String correct_answer;
-    private ArrayList<String>incorrect_answer;
+    private ArrayList<String> incorrect_answers;
 
     public String getCategory() {
         return category;
@@ -54,11 +54,23 @@ public class Pregunta {
         this.correct_answer = correct_answer;
     }
 
-    public ArrayList<String> getIncorrect_answer() {
-        return incorrect_answer;
+    public ArrayList<String> getIncorrect_answers() {
+        return incorrect_answers;
     }
 
-    public void setIncorrect_answer(ArrayList<String> incorrect_answer) {
-        this.incorrect_answer = incorrect_answer;
+    public void setIncorrect_answers(ArrayList<String> incorrect_answers) {
+        this.incorrect_answers = incorrect_answers;
+    }
+
+    @Override
+    public String toString() {
+        return "Pregunta{" +
+                "category='" + category + '\'' +
+                ", type='" + type + '\'' +
+                ", difficulty='" + difficulty + '\'' +
+                ", question='" + question + '\'' +
+                ", correct_answer='" + correct_answer + '\'' +
+                ", incorrect_answer=" + incorrect_answers +
+                '}';
     }
 }
