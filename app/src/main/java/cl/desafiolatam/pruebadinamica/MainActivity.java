@@ -3,6 +3,7 @@ package cl.desafiolatam.pruebadinamica;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.FragmentManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -19,6 +20,7 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements OnFragmentPreguntaListener {
     public static final String TAG = "LifeCicleLog";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

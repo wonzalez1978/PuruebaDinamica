@@ -1,5 +1,6 @@
 package cl.desafiolatam.pruebadinamica.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
@@ -37,6 +39,16 @@ public class PreguntaFragment extends Fragment {
         return fragment;
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentPreguntaListener) {
+            mListener = (OnFragmentPreguntaListener) context;
+        } else {
+            throw new ClassCastException(context.toString() + "aun no implementas la interface en esta actividad");
+        }
+    }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_pregunta, container, false);
@@ -47,7 +59,7 @@ public class PreguntaFragment extends Fragment {
         final ArrayList<String> incorrect_answers = Objects.requireNonNull(getArguments().getStringArrayList("INCORRECT_ANSWERS"));
 
         //inicializamos las vistas declaradas
-        initializeViews (view);
+        initializeViews(view);
         //asignando valores dinamicos en base a los datos recibidos
         //de nuestra API asignamos valores a las vistas
 
@@ -55,18 +67,18 @@ public class PreguntaFragment extends Fragment {
         preguntaView.setText(questions);
         categoriaView.setText(category);
 
-       //Recorremos el arreglo de Strings "Incorrect answers" de nuestra API de datos
+        //Recorremos el arreglo de Strings "Incorrect answers" de nuestra API de datos
         for (int x = 0; x < incorrect_answers.size(); x++) {
             switch (x) {
                 case 0:
                     respuestaUno.setText(incorrect_answers.get(x));
                     break;
                 case 1:
-                respuestaDos.setText(incorrect_answers.get(x));
-                break;
+                    respuestaDos.setText(incorrect_answers.get(x));
+                    break;
                 case 2:
-                respuestaTres.setText(incorrect_answers.get(x));
-                break;
+                    respuestaTres.setText(incorrect_answers.get(x));
+                    break;
             }
         }
         //AGREGAMOS LA RESPUESTA CORRECTA DE LA API EN UN CUARTO RADIOBUTTON
@@ -76,35 +88,43 @@ public class PreguntaFragment extends Fragment {
         grupoRespuestasView.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (respuestaUno.isChecked()){
-                    radioButtonValue = 1;
-
-                }else if (respuestaDos.isChecked()){
-                    radioButtonValue = 2;
-                }else if (respuestaTres.isChecked()){
-                    radioButtonValue = 3;
-                }else if (respuestaCuatro.isChecked()){
-                    radioButtonValue = 4;
+                if (respuestaUno.isChecked()) {
+                    setRadioButtonsValues(1, respuestaUno.getText().toString());
+                } else if (respuestaDos.isChecked()) {
+                    setRadioButtonsValues(2, respuestaDos.getText().toString());
+                } else if (respuestaTres.isChecked()){
+                    setRadioButtonsValues(3, respuestaTres.getText().toString());
+                } else if (respuestaCuatro.isChecked()) {
+                    setRadioButtonsValues(4, respuestaCuatro.getText().toString());
                 }
             }
 
+            private void setRadioButtonsValues(int radioButtonValu, String respuesta) {
+                //ENVIAMOS NUESTRO VALOR SELECCIONADO AL LISTENER DE LA INTEFACE
+                mListener.onRadioButtonSelection(radioButtonValu, respuesta);
+                radioButtonValue = radioButtonValu;
+            }
         });
         return view;
     }
 
-private void initializeViews(View view){
-    preguntaView=view.findViewById(R.id.textViewQuestions);
-    categoriaView=view.findViewById(R.id.textViewCategory);
-    grupoRespuestasView=view.findViewById(R.id.rgRespuestas);
-    respuestaUno=view.findViewById(R.id.rRespuestaUno);
-    respuestaDos=view.findViewById(R.id.rRespuestaDos);
-    respuestaTres=view.findViewById(R.id.rRespuestaTres);
-    respuestaCuatro=view.findViewById(R.id.rRespuestaCuatro);
+    @Override
+    public void onDetach() {
+        mListener = null;
+        super.onDetach();
 
-}
+    }
 
+    private void initializeViews(View view) {
+        preguntaView = view.findViewById(R.id.textViewQuestions);
+        categoriaView = view.findViewById(R.id.textViewCategory);
+        grupoRespuestasView = view.findViewById(R.id.rgRespuestas);
+        respuestaUno = view.findViewById(R.id.rRespuestaUno);
+        respuestaDos = view.findViewById(R.id.rRespuestaDos);
+        respuestaTres = view.findViewById(R.id.rRespuestaTres);
+        respuestaCuatro = view.findViewById(R.id.rRespuestaCuatro);
 
-
+    }
 
 
 }
