@@ -7,7 +7,7 @@ import cl.desafiolatam.pruebadinamica.bean.Pregunta;
 // Creamos un objeto pojo java para el mapeo
 // de los datos a recibir desde el api opentdben formato json.
 
-public class PreguntasListas {
+public class PreguntasLista {
 
     private int response_code;
     private ArrayList<Pregunta> results;

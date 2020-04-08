@@ -20,16 +20,17 @@ import cl.desafiolatam.pruebadinamica.R;
 
 public class PreguntaFragment extends Fragment {
     private int radioButtonValue = 0;
-    private TextView preguntaView, categoriaView;
+    private TextView preguntaView, categoriaView, preguntaLabel;
     private RadioGroup grupoRespuestasView;
     private RadioButton respuestaUno, respuestaDos, respuestaTres, respuestaCuatro;
     private OnFragmentPreguntaListener mListener;
 
 
-    public static PreguntaFragment newInstance(String questions, String category, String correct_answer, ArrayList<String> incorrectAnswers) {
+    public static PreguntaFragment newInstance(int cantidad, String questions, String category, String correct_answer, ArrayList<String> incorrectAnswers) {
 
         PreguntaFragment fragment = new PreguntaFragment();
         Bundle arguments = new Bundle();
+        arguments.putString("NUMERO_PREGUNTA", "PREGUNTA" +cantidad);
         arguments.putString("QUESTIONS", questions);
         arguments.putString("CATEGORY", category);
         arguments.putString("CORRECT_ANSWER", correct_answer);
@@ -52,7 +53,7 @@ public class PreguntaFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_pregunta, container, false);
-
+        final String preguntaTitulo = Objects.requireNonNull(getArguments()).getString("NUMERO_PREGUNTA");
         final String questions = Objects.requireNonNull(getArguments()).getString("QUESTIONS");
         final String category = Objects.requireNonNull(getArguments().getString("CATEGORY"));
         final String correct_answer = Objects.requireNonNull(getArguments().getString("CORRECT_ANSWER"));
@@ -63,9 +64,10 @@ public class PreguntaFragment extends Fragment {
         //asignando valores dinamicos en base a los datos recibidos
         //de nuestra API asignamos valores a las vistas
 
-        //
+
         preguntaView.setText(questions);
         categoriaView.setText(category);
+        preguntaLabel.setText(preguntaTitulo);
 
         //Recorremos el arreglo de Strings "Incorrect answers" de nuestra API de datos
         for (int x = 0; x < incorrect_answers.size(); x++) {
@@ -123,6 +125,7 @@ public class PreguntaFragment extends Fragment {
         respuestaDos = view.findViewById(R.id.rRespuestaDos);
         respuestaTres = view.findViewById(R.id.rRespuestaTres);
         respuestaCuatro = view.findViewById(R.id.rRespuestaCuatro);
+        preguntaLabel = view.findViewById(R.id.tituloPregunta);
 
     }
 
