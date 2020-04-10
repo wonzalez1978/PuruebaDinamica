@@ -1,11 +1,14 @@
 package cl.desafiolatam.pruebadinamica.fragment;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -24,13 +27,14 @@ public class PreguntaFragment extends Fragment {
     private RadioGroup grupoRespuestasView;
     private RadioButton respuestaUno, respuestaDos, respuestaTres, respuestaCuatro;
     private OnFragmentPreguntaListener mListener;
+    private Button btnVerRespuesta;
 
 
     public static PreguntaFragment newInstance(int cantidad, String questions, String category, String correct_answer, ArrayList<String> incorrectAnswers) {
 
         PreguntaFragment fragment = new PreguntaFragment();
         Bundle arguments = new Bundle();
-        arguments.putString("NUMERO_PREGUNTA", "PREGUNTA" +cantidad);
+        arguments.putString("NUMERO_PREGUNTA", "PREGUNTA" + cantidad);
         arguments.putString("QUESTIONS", questions);
         arguments.putString("CATEGORY", category);
         arguments.putString("CORRECT_ANSWER", correct_answer);
@@ -94,7 +98,7 @@ public class PreguntaFragment extends Fragment {
                     setRadioButtonsValues(1, respuestaUno.getText().toString());
                 } else if (respuestaDos.isChecked()) {
                     setRadioButtonsValues(2, respuestaDos.getText().toString());
-                } else if (respuestaTres.isChecked()){
+                } else if (respuestaTres.isChecked()) {
                     setRadioButtonsValues(3, respuestaTres.getText().toString());
                 } else if (respuestaCuatro.isChecked()) {
                     setRadioButtonsValues(4, respuestaCuatro.getText().toString());
@@ -107,27 +111,37 @@ public class PreguntaFragment extends Fragment {
                 radioButtonValue = radioButtonValu;
             }
         });
+        btnVerRespuesta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse("https://opentdb.com/api.php?amount=10&category=15&difficulty=easy");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
+
+        });
         return view;
+        }
+
+        @Override
+        public void onDetach () {
+            mListener = null;
+            super.onDetach();
+
+        }
+
+        private void initializeViews (View view){
+            preguntaView = view.findViewById(R.id.textViewQuestions);
+            categoriaView = view.findViewById(R.id.textViewCategory);
+            grupoRespuestasView = view.findViewById(R.id.rgRespuestas);
+            respuestaUno = view.findViewById(R.id.rRespuestaUno);
+            respuestaDos = view.findViewById(R.id.rRespuestaDos);
+            respuestaTres = view.findViewById(R.id.rRespuestaTres);
+            respuestaCuatro = view.findViewById(R.id.rRespuestaCuatro);
+            preguntaLabel = view.findViewById(R.id.tituloPregunta);
+            btnVerRespuesta = view.findViewById(R.id.btnConsultaRespuesta);
+
+        }
+
+
     }
-
-    @Override
-    public void onDetach() {
-        mListener = null;
-        super.onDetach();
-
-    }
-
-    private void initializeViews(View view) {
-        preguntaView = view.findViewById(R.id.textViewQuestions);
-        categoriaView = view.findViewById(R.id.textViewCategory);
-        grupoRespuestasView = view.findViewById(R.id.rgRespuestas);
-        respuestaUno = view.findViewById(R.id.rRespuestaUno);
-        respuestaDos = view.findViewById(R.id.rRespuestaDos);
-        respuestaTres = view.findViewById(R.id.rRespuestaTres);
-        respuestaCuatro = view.findViewById(R.id.rRespuestaCuatro);
-        preguntaLabel = view.findViewById(R.id.tituloPregunta);
-
-    }
-
-
-}
