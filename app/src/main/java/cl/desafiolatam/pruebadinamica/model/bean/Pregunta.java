@@ -1,4 +1,4 @@
-package cl.desafiolatam.pruebadinamica.bean;
+package cl.desafiolatam.pruebadinamica.model.bean;
 
 import java.util.ArrayList;
 

@@ -1,6 +1,6 @@
-package cl.desafiolatam.pruebadinamica.api;
+package cl.desafiolatam.pruebadinamica.model.bean.api;
 
-import cl.desafiolatam.pruebadinamica.bean.PreguntasLista;
+import cl.desafiolatam.pruebadinamica.model.bean.PreguntasLista;
 import retrofit2.Call;
 import retrofit2.http.GET;
 

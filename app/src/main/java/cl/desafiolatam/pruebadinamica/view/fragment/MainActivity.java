@@ -1,6 +1,5 @@
-package cl.desafiolatam.pruebadinamica;
+package cl.desafiolatam.pruebadinamica.view.fragment;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -14,66 +13,38 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import cl.desafiolatam.pruebadinamica.adapters.FragmentosPageAdapter;
-import cl.desafiolatam.pruebadinamica.api.IApi;
-import cl.desafiolatam.pruebadinamica.api.RetrofitClient;
-import cl.desafiolatam.pruebadinamica.bean.Pregunta;
-import cl.desafiolatam.pruebadinamica.bean.PreguntasLista;
-import cl.desafiolatam.pruebadinamica.fragment.OnFragmentPreguntaListener;
-import cl.desafiolatam.pruebadinamica.fragment.PreguntaFragment;
+import cl.desafiolatam.pruebadinamica.R;
+import cl.desafiolatam.pruebadinamica.model.bean.Model;
+import cl.desafiolatam.pruebadinamica.presenter.IPresenter;
+import cl.desafiolatam.pruebadinamica.presenter.IPresenterModel;
+import cl.desafiolatam.pruebadinamica.presenter.Presenter;
+import cl.desafiolatam.pruebadinamica.view.fragment.adapters.FragmentosPageAdapter;
+import cl.desafiolatam.pruebadinamica.model.bean.api.IApi;
+import cl.desafiolatam.pruebadinamica.model.bean.api.RetrofitClient;
+import cl.desafiolatam.pruebadinamica.model.bean.Pregunta;
+import cl.desafiolatam.pruebadinamica.model.bean.PreguntasLista;
+import cl.desafiolatam.pruebadinamica.view.fragment.OnFragmentPreguntaListener;
+import cl.desafiolatam.pruebadinamica.view.fragment.PreguntaFragment;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements OnFragmentPreguntaListener {
+public class MainActivity extends AppCompatActivity implements OnFragmentPreguntaListener, IPresenterView, IView {
     public static final String TAG = "LifeCicleLog";
-
+    IPresenter iPresenter;
     FragmentPagerAdapter fragmentsPageAdapter;
     ViewPager viewPager;
+    Presenter presenter;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Log.i(TAG, "onCreate: Creando la actividad");
-        FragmentManager fragmentManager = getFragmentManager();
-
-        IApi service = RetrofitClient.getRetrofitInstance().create(IApi.class);
-        Call<PreguntasLista> call = service.getAllQuestions();
-
-        call.enqueue(new Callback<PreguntasLista>() {
-            private Object Pregunta;
-
-            @Override
-            public void onResponse(Call<PreguntasLista> call, Response<PreguntasLista> response) {
-                Log.i(TAG, "onResponse" + response);
-                PreguntasLista preguntas = response.body();
-
-                int contadorPregunta = 1;
-
-                if (preguntas != null) {
-                    List<Fragment> paginasFragmentos = getFragmentosDinamicos(preguntas);
-                    fragmentsPageAdapter = new FragmentosPageAdapter(getSupportFragmentManager(), paginasFragmentos);
-                    viewPager = findViewById(R.id.viewPager);
-                    viewPager.setAdapter(fragmentsPageAdapter);
-
-                    Log.i(TAG, "onResponse");
-
-
-                    for (int x = 0; x < response.body().getResults().size(); x++) {
-                        Log.d(TAG, "Pregunta:" + response.body().getResults().get(x).getQuestion());
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<PreguntasLista> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "error no pudimos recuperar los datos de el servidor", Toast.LENGTH_SHORT).show();
-                Log.i(TAG, "se ejecutó on Failure");
-
-            }
-        });
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_main);
+            Log.i(TAG, "onCreate: Creando la actividad");
+            FragmentManager fragmentManager = getFragmentManager();
+            iniciarPresenter();
+            getDatosDesdePresenter();
 
     }
 
@@ -140,6 +111,31 @@ public class MainActivity extends AppCompatActivity implements OnFragmentPregunt
     }
 
 
+    @Override
+    public void notificarVista(PreguntasLista preguntasLista) {
+
+        List<Fragment> paginasFragmentos = getFragmentosDinamicos(preguntasLista);
+        fragmentsPageAdapter = new FragmentosPageAdapter(getSupportFragmentManager(), paginasFragmentos);
+        viewPager = findViewById(R.id.viewPager);
+        viewPager.setAdapter(fragmentsPageAdapter);
+
+        Log.i(TAG, "Notificar Vista");
+
+
+    }
+
+    @Override
+    public void iniciarPresenter() {
+        presenter  = new Presenter(this);
+        presenter.setModel(new Model((IPresenterModel)presenter));
+
+    }
+
+    @Override
+    public void getDatosDesdePresenter() {
+        presenter.getDatosDesdeModel();
+
+    }
 }
 
 

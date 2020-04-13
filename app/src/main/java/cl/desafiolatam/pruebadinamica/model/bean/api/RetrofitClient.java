@@ -1,10 +1,9 @@
-package cl.desafiolatam.pruebadinamica.api;
+package cl.desafiolatam.pruebadinamica.model.bean.api;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import android.util.Log;
-import android.widget.Toast;
 
 public class RetrofitClient {
     private static final String TAG = "RETROFITcLIENT";

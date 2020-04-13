@@ -1,8 +1,6 @@
-package cl.desafiolatam.pruebadinamica.bean;
+package cl.desafiolatam.pruebadinamica.model.bean;
 
 import java.util.ArrayList;
-
-import cl.desafiolatam.pruebadinamica.bean.Pregunta;
 
 // Creamos un objeto pojo java para el mapeo
 // de los datos a recibir desde el api opentdben formato json.

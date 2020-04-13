@@ -1,4 +1,4 @@
-package cl.desafiolatam.pruebadinamica.adapters;
+package cl.desafiolatam.pruebadinamica.view.fragment.adapters;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;

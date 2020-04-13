@@ -1,4 +1,4 @@
-package cl.desafiolatam.pruebadinamica.fragment;
+package cl.desafiolatam.pruebadinamica.view.fragment;
 
 import android.content.Context;
 import android.content.Intent;
